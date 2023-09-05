@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package cotaparser.api.v1;
+
+option go_package = "./api/cotaparser/v1;v1";
+
+import "api/cotaparser/v1/entry.proto";
+
+service Cota {
+  rpc GetCotaEntries (GetCotaEntriesRequest) returns (stream GetCotaEntriesResponse) {}
+  rpc GetClassMetadata (GetClassMetadataRequest) returns (stream GetClassMetadataResponse) {}
+  rpc GetIssuerMetadata (GetIssuerMetadataRequest) returns (stream GetIssuerMetadataResponse) {}
+}
+
+message GetCotaEntriesRequest {
+  string witness = 1;
+  string version = 2;
+}
+
+message GetCotaEntriesResponse {
+  CotaEntry entry = 1;
+}
+
+message CotaEntry {
+  oneof entry {
+    Define define = 11;
+    Mint mint = 12;
+    Withdraw withdraw = 13;
+    Claim claim = 14;
+    Update update = 15;
+    Transfer transfer = 16;
+    ClaimAndUpdate claimAndUpdate = 17;
+    TransferAndUpdate transferAndUpdate = 18;
+  }
+}
+
+message CharacteristicValue {
+  repeated string values = 1;
+}
+
+message Characteristic {
+  repeated CharacteristicValue values = 1;
+}
+
+message PropertyValue {
+  map<string, string> value = 1;
+}
+
+message Properties {
+  map<string, PropertyValue> value = 1;
+}
+
+message ClassInfo {
+  string cotaId = 1;
+  string version = 2;
+  string name = 3;
+  string symbol = 4;
+  string description = 5;
+  string import = 6;
+  string auto = 7;
+  string video = 8;
+  string model = 9;
+  Characteristic characteristic = 10;
+  Properties properties = 11;
+  Localization localization = 12;
+}
+
+message GetClassMetadataRequest {
+  string witness = 1;
+  string version = 2;
+}
+
+message GetClassMetadataResponse {
+  ClassInfo info = 1;
+}
+
+message Localization {
+  string uri = 1;
+  string default = 2;
+  repeated string locales = 3;
+}
+
+message IssuerInfo {
+  string version = 1;
+  string name = 2;
+  string avatar = 3;
+  string description = 4;
+  Localization localization = 5;
+}
+
+message GetIssuerMetadataRequest {
+  string witness = 1;
+  string version = 2;
+}
+
+message GetIssuerMetadataResponse {
+  IssuerInfo info = 1;
+}

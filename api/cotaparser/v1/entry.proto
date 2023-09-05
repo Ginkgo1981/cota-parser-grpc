@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package cotaparser.api.v1;
+
+option go_package = "./api/cotaparser/v1;v1";
+
+message Script {
+  string codeHash = 1;
+  string hashType = 2;
+  string args = 3;
+}
+
+message DefineCotaNFTId {
+  string smtType = 1;
+  string cotaId = 2;
+}
+
+message DefineCotaNFTValue {
+  uint32 total = 1;
+  uint32 issued = 2;
+  uint32 configure = 3;
+}
+
+message DefineCotaNFTKeyVec {
+  repeated DefineCotaNFTId keys = 1;
+}
+
+message DefineCotaNFTValueVec {
+  repeated DefineCotaNFTValue values = 1;
+}
+
+message Define {
+  DefineCotaNFTKeyVec defineKeys = 1;
+  DefineCotaNFTValueVec defineValues = 2;
+  string proof = 3;
+  string action = 4;
+}
+
+message CotaNFTId {
+  string smtType = 1;
+  string cotaId = 2;
+  uint32 index = 3;
+}
+
+message WithdrawalCotaNFTKeyVec {
+  repeated CotaNFTId cotaNFTIds = 1;
+}
+
+message WithdrawalCotaNFTKeyV1Vec {
+  repeated WithdrawalCotaNFTKeyV1 keys = 1;
+}
+
+message WithdrawalCotaNFTKeyV1 {
+  CotaNFTId nftIds = 1;
+  string outPoint = 2;
+}
+
+message WithdrawalCotaNFTValueVec {
+  repeated WithdrawalCotaNFTValue values = 1;
+}
+
+message WithdrawalCotaNFTValueV1Vec {
+  repeated WithdrawalCotaNFTValueV1 values = 1;
+}
+
+message CotaNFTInfo {
+  uint32 configure = 1;
+  uint32 state = 2;
+  string characteristic = 3;
+}
+
+message WithdrawalCotaNFTValue {
+  CotaNFTInfo nftInfo = 1;
+  Script toLock = 2;
+  string outPoint = 3;
+}
+
+message WithdrawalCotaNFTValueV1 {
+  CotaNFTInfo nftInfo = 1;
+  Script toLock = 2;
+}
+
+message HoldCotaNFTKeyVec {
+  repeated CotaNFTId cotaNFTIds = 1;
+}
+
+message HoldCotaNFTValueVec {
+  repeated CotaNFTInfo nftInfos = 1;
+}
+
+message ClaimCotaNFTKey {
+  CotaNFTId nftId = 1;
+  string outPoint = 2;
+}
+
+message ClaimCotaNFTKeyVec {
+  repeated ClaimCotaNFTKey keys = 1;
+}
+
+message ClaimCotaNFTValueVec {
+  repeated string values = 1;
+}
+
+message ClaimCotaNFTInfo {
+  string version = 1;
+  CotaNFTInfo nftInfo = 2;
+}
+
+message ClaimCotaNFTInfoVec {
+  repeated ClaimCotaNFTInfo infos = 1;
+}
+
+message Mint {
+  DefineCotaNFTKeyVec defineKeys = 1;
+  DefineCotaNFTValueVec defineOldValues = 2;
+  DefineCotaNFTValueVec defineNewValues = 3;
+  oneof withdrawalKeys {
+    WithdrawalCotaNFTKeyVec v0Keys = 4;
+    WithdrawalCotaNFTKeyV1Vec v1Keys = 5;
+  }
+  oneof withdrawValues {
+    WithdrawalCotaNFTValueVec v0Values = 6;
+    WithdrawalCotaNFTValueV1Vec v1Values = 7;
+  }
+  string proof = 8;
+  string action = 9;
+}
+
+message Withdraw {
+  HoldCotaNFTKeyVec holdKeys = 1;
+  HoldCotaNFTValueVec holdValues = 2;
+  oneof withdrawalKeys {
+    WithdrawalCotaNFTValueVec v0Keys = 3;
+    WithdrawalCotaNFTValueV1Vec v1Keys = 4;
+  }
+  oneof withdrawValues {
+    WithdrawalCotaNFTValueVec v0Values = 5;
+    WithdrawalCotaNFTValueV1Vec v1Values = 6;
+  }
+  string proof = 8;
+  string action = 9;
+}
+
+message Claim {
+  HoldCotaNFTKeyVec holdKeys = 1;
+  HoldCotaNFTValueVec holdValues = 2;
+  ClaimCotaNFTKeyVec claimKeys = 3;
+  ClaimCotaNFTValueVec claimValues = 4;
+  string proof = 5;
+  string withdrawalProof = 6;
+  string action = 7;
+}
+
+message Update {
+  HoldCotaNFTKeyVec holdKeys = 1;
+  HoldCotaNFTValueVec holdOldValues = 2;
+  HoldCotaNFTValueVec holdNewValues = 3;
+  string proof = 4;
+  string action = 5;
+}
+
+message Transfer {
+  ClaimCotaNFTKeyVec claimKeys = 1;
+  ClaimCotaNFTValueVec claimValues = 2;
+  oneof withdrawalKeys {
+    WithdrawalCotaNFTKeyVec v0Keys = 3;
+    WithdrawalCotaNFTKeyV1Vec v1Keys = 4;
+  }
+  oneof withdrawValues {
+    WithdrawalCotaNFTValue v0Values = 5;
+    WithdrawalCotaNFTValueV1 v1Values = 6;
+  }
+  string proof = 7;
+  string withdrawalProof = 8;
+  string action = 9;
+}
+
+message ClaimAndUpdate {
+  HoldCotaNFTKeyVec holdKeys = 1;
+  HoldCotaNFTValueVec holdValues = 2;
+  ClaimCotaNFTKeyVec claimKeys = 3;
+  ClaimCotaNFTInfoVec claim_infos = 4;
+  string proof = 5;
+  string withdrawalProof = 6;
+  string action = 7;
+}
+
+message TransferAndUpdate {
+  ClaimCotaNFTKeyVec claimKeys = 1;
+  ClaimCotaNFTInfoVec claim_infos = 2;
+  oneof withdrawalKeys {
+    WithdrawalCotaNFTKeyVec v0Keys = 3;
+    WithdrawalCotaNFTKeyV1Vec v1Keys = 4;
+  }
+  oneof withdrawValues {
+    WithdrawalCotaNFTValue v0Values = 5;
+    WithdrawalCotaNFTValueV1 v1Values = 6;
+  }
+  string proof = 7;
+  string withdrawalProof = 8;
+  string action = 9;
+}
